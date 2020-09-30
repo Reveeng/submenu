@@ -1,38 +1,34 @@
 #include "lvgl/lvgl.h"
 
 struct labels_for_third_menu{
-    char * first_btn_third_menu_labels[3] = {"","",""};
-    int first_btn_count = 3;
-    char * first_btn_third_menu_labels[3] = {"","",""};
-    int second_btn_count = 3;
-    char * first_btn_third_menu_labels[3] = {"","",""};
-    int third_btn_count = 3;
-    char * first_btn_third_menu_labels[3] = {"","",""};
-    int fourth_btn_count = 3;
-    char * first_btn_third_menu_labels[3] = {"","",""};
-    int fifth_btn_count = 3;
-    char * first_btn_third_menu_labels[3] = {"","",""};
-    int six_btn_count = 3;
+    char * first_btn_third_menu_labels[3];
+    int first_btn_count,second_btn_count,
+    third_btn_count,fourth_btn_count,
+    fifth_btn_count,six_btn_count;
+    char * second_btn_third_menu_labels[3];
+    char * third_btn_third_menu_labels[3];
+    char * fourth_btn_third_menu_labels[3];
+    char * fifth_btn_third_menu_labels[3];
+    char * six_btn_third_menu_labels[3];
 };
 
 struct labels_for_second_menu{
-    char * first_btn_second_menu_labels[2] = {"video","audio"};
-    int first_btn_count = 2;
-    char * second_btn_second_menu_labels[2] = {"download","upload"};
-    int second_btn_count = 2;
+    char * first_btn_second_menu_labels[2];
+    int first_btn_count,second_btn_count = 2;
+    char * second_btn_second_menu_labels[2];
 };
 
 struct labels_for_first_menu{
-    char * first_menu_labels[2] = {"setting","video"};
+    char * first_menu_labels[2];
     int count = 2;
 };
 
 
 typedef struct submenu_t {
 
-    struct labels_for_first_menu;
-    struct labels_for_second_menu;
-    struct labels_for_third_menu;
+    struct labels_for_first_menu FLABEL;
+    struct labels_for_second_menu SLABEL;
+    struct labels_for_third_menu TLABEL;
     lv_obj_t * first_menu;
     lv_obj_t * second_menu;
     lv_obj_t * first_menu_list_btn;
@@ -190,43 +186,51 @@ static void menu_build(whatever_t * menu_to_build)
             lv_obj_del(menu_list);
         }
     }
-/**распознает какая кнопка нажата в первом меню, посылаю вместе с нажатой кнопкой номер кнопки*/
-void first_connector(lv_obj_t * pressed_btn, lv_event_t event){
-    static whatever_t menu_to_build;
-    menu_to_build.pressed_btn = pressed_btn;
+void setting_pressed(lv_obj_t * pressed_btn, lv_event_t event){
+    MENU * mainmenu = lv_obj_get_user_data(pressed_btn);
     if (event == LV_EVENT_CLICKED){
-        int menu_order = * (int *)lv_obj_get_user_data(pressed_btn);
-        if (menu_order == 1){
-                menu_to_build.menu_order = 1;
-                menu_to_build.menu_labels = {"video","audio","image"};
-                menu_to_build.btn_count = 3;
-            menu_build(&menu_to_buld);
-        }
-        else if(menu_order == 2){
-            menu_to_build.menu_order = 2;
-            menu_to_build.menu_labels = {"download","upload","other"};
-            menu_to_build.btn_count = 3;
-            menu_build(menu_to_build);
-        }}}
-
+    }
+}
+void video_pressed(lv_obj_t * pressed_btn, lv_event_t event){
+    MENU * mainmenu = lv_obj_get_user_data(pressed_btn);
+    if (event == LV_EVENT_CLICKED){
+    }
+}
 
 /**создаю первые 2 кнопки и записываю их в группу*/
-void submenu(void)
+void submenu(MENU * mainmenu)
 {
-    MENU * mainmenu;
+    mainmenu.FLABEL.first_menu_labels = {"setting","video"};
+    mainmenu.FLABEL.count = 2;
+    mainmenu.SLABEL.first_btn_second_menu_labels = {"video","image"};
+    mainmenu.SLABEL.second_btn_second_menu_labels = {"download","upload"};
+    mainmenu.SLABEL.first_btn_count = 2;
+    mainmenu.SLABEL.second_btn_count = 2;
+    mainmenu.TLABEL.first_btn_third_menu_labels = {"1","2","3"};
+    mainmenu.TLABEL.second_btn_third_menu_labels = {"1","2","3"};
+    mainmenu.TLABEL.third_btn_third_menu_labels = {"1","2","3"};
+    mainmenu.TLABEL.fourth_btn_third_menu_labels = {"1","2","3"};
+    mainmenu.TLABEL.fifth_btn_third_menu_labels = {"1","2","3"};
+    mainmenu.TLABEL.six_btn_third_menu_labels = {"1","2","3"};
+    mainmenu.TLABEL.first_btn_count = 3;
+    mainmenu.TLABEL.second_btn_count = 3;
+    mainmenu.TLABEL.third_btn_count = 3;
+    mainmenu.TLABEL.fourth_btn_count = 3;
+    mainmenu.TLABEL.fifth_btn_count = 3;
+    mainmenu.TLABEL.six_btn_count = 3;
+
     lv_group_t * main_group = lv_group_create();
     lv_obj_t * win = lv_win_create(lv_scr_act(), NULL);
     lv_win_set_header_height(win,40);
-    lv_obj_t * menu1 = lv_win_add_btn_right(win, LV_SYMBOL_SETTINGS);
-    lv_obj_t * menu2 = lv_win_add_btn_right(win, LV_SYMBOL_VIDEO);
-    lv_cont_set_fit(menu2,LV_FIT_TIGHT);
-    for (int i = 0;i<=mainmenu.labels_for_first_menu.count)
-    lv_obj_set_user_data(menu1,&i);
-    lv_obj_set_user_data(menu2,&k);
-    lv_obj_set_event_cb(menu1,first_connector);
-    lv_obj_set_event_cb(menu2,first_connector);
-    lv_group_add_obj(main_group,menu1);
-    lv_group_add_obj(main_group,menu2);
+    lv_obj_t * setting_btn = lv_win_add_btn_right(win, LV_SYMBOL_SETTINGS);
+    lv_obj_t * video_btn = lv_win_add_btn_right(win, LV_SYMBOL_VIDEO);
+    lv_cont_set_fit(video_btn,LV_FIT_TIGHT);
+    lv_obj_set_event_cb(setting_btn,setting_pressed);
+    lv_obj_set_event_cb(video_btn,video_pressed);
+    lv_obj_set_user_data(setting_btn,mainmenu);
+    lv_obj_set_user_data(video_btn,mainmenu);
+    lv_group_add_obj(main_group,setting_btn);
+    lv_group_add_obj(main_group,video_btn);
     /**нужно поменять строку и вписать сюда устройство ввода*/
     /**lv_indev_set_group(indev,main_group);*/
 
