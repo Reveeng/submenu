@@ -112,8 +112,8 @@ void set_extr_data(lv_obj_t * btn,int number){
 }
 
 void menu_init(MENU * mainmenu){
-    char * labels1 =  {"video","image","download","upload"};
-    char * labels2 = {"1","2","3","4","5","6",
+    char * labels_for_first_menu =  {"video","image","download","upload"};
+    char * labels_for_second_menu = {"1","2","3","4","5","6",
                     "7","8","9","10","11","12",
                     "13","14","15","16","17","18"};
     for (int i = 0; i<=3;i++){
