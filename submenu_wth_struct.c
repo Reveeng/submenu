@@ -1,6 +1,9 @@
 #include "lvgl/lvgl.h"
-#include "../../Desktop/submenu/my_programms.h"
+#include "C:\Users\Егор\Desktop\работа\submenu\submenu/my_programms.h"
+#include <string.h>
 
+
+// в функции main вставить MENU * mainmenu = (MENU *)malloc(sizeof(MENU)); и free(mainmenu); после цикла while(1)
 typedef struct{
     lv_btn_ext_t btn;
     int btn_number;
@@ -11,7 +14,7 @@ typedef struct{
 static void submenu_build(lv_obj_t * pressed_btn, lv_event_t event);
 //построение 1 меню
 static void menu_build(lv_obj_t * pressed_btn, lv_event_t event);
-//добалвение номеров кнопкам в окне
+//добавление номера к кнопке
 void set_extr_data(lv_obj_t * btn,int number);
 
 /**вызывает submenu_build со значением count = 1 и третье меню*/
@@ -100,11 +103,6 @@ static void menu_build(lv_obj_t * pressed_btn, lv_event_t event)
     }
 }
 
-/**void setting_pressed(lv_obj_t * pressed_btn, lv_event_t event){
-    MENU * mainmenu = lv_obj_get_user_data(pressed_btn);
-    if (event == LV_EVENT_CLICKED){
-    }
-}*/
 void set_extr_data(lv_obj_t * btn,int number){
     lv_obj_allocate_ext_attr(btn, sizeof(btn_with_number));
     btn_with_number * ext = lv_obj_get_ext_attr(btn);
@@ -112,31 +110,34 @@ void set_extr_data(lv_obj_t * btn,int number){
 }
 
 void menu_init(MENU * mainmenu){
-    char * labels_for_first_menu =  {"video","image","download","upload"};
-    char * labels_for_second_menu = {"1","2","3","4","5","6",
+    char * labels_for_first_menu[5] =  {"video","image","download","upload",""};
+    char * labels_for_second_menu[19] = {"1","2","3","4","5","6",
                     "7","8","9","10","11","12",
-                    "13","14","15","16","17","18"};
-    for (int i = 0; i<=3;i++){
-        int j = 0;
-        if (i%2 == 0){
-            j++;
-        }
+                    "13","14","15","16","17","18",""};
+    int j = 0;
+    for (int iter1 = 0; strcmp("",labels_for_first_menu[iter1]) != 0; iter1++){
+        mainmenu->first_menu_labels[j][iter1%2] = labels_for_first_menu[iter1];
+        if ((iter1+1)%2 == 0){j++;}
     }
-    for (int i = 1;i<=18,i++){
-        int j = 0;
-        if (i%3 = 0){
-            j++;
-        }
+    int k = 0;
+    for (int iter2 = 0;strcmp("",labels_for_second_menu[iter2]) != 0;iter2++){
+        mainmenu->second_menu_labels[k][iter2%3] = labels_for_second_menu[iter2];
+        if ((iter2+1)%3 == 0){k++;}
     }
-    mainmenu->second_menu_labels =
-    mainmenu->number_of_btn_in_first_menu = {2,2};
-    mainmenu->number_of_btn_in_sec_menu = {3,3,3,3,3,3};
+    for (int i = 0; i<=1;i++){
+        mainmenu->number_of_btn_in_first_menu[i] = 2;}
+    for (int i = 0; i<=17; i++){
+        mainmenu->number_of_btn_in_sec_menu[i] = 3;}
 }
 
 /**создаю первые 2 кнопки и записываю их в группу*/
 void submenu(MENU * mainmenu)
 {
-    menu_init(mainmenu); //инициализация меню
+    static int menu_init_count = 0;
+    if (menu_init_count == 0){
+        menu_init(mainmenu); //инициализация меню
+        menu_init_count = 1;
+    }
     lv_group_t * main_group = lv_group_create();
     lv_obj_t * win = lv_win_create(lv_scr_act(), NULL);
     lv_win_set_header_height(win,40);
