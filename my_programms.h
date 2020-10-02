@@ -6,7 +6,7 @@ extern "C" {
 #endif
 typedef struct submenu_t {
     char * first_menu_labels[2][2];//массив названий кнопок для первого меню
-    char * second_menu_labels[6][3];//массив названий кнопок для второго меню
+    char * second_menu_labels[4][3];//массив названий кнопок для второго меню
     int number_of_btn_in_first_menu[2];//массив колличества кнопок в 1 меню
     int number_of_btn_in_sec_menu[3];//массив колличества кнопок во  меню
     lv_obj_t * first_menu;//указатель на первое меню

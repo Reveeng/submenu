@@ -27,7 +27,7 @@ void connector(lv_obj_t * pressed_btn, lv_event_t event){
 static void submenu_build(lv_obj_t * pressed_btn, lv_event_t event) /**if return 1 - delete*/
 {
     MENU * mainmenu = lv_obj_get_user_data(pressed_btn);
-    int32_t btn_index = lv_list_get_btn_index(mainmenu->first_menu,pressed_btn);
+    btn_with_number * ext = lv_obj_get_ext_attr(pressed_btn);
     static int count = 0;
     lv_obj_t * list_btn;
     switch (event){
@@ -38,8 +38,8 @@ static void submenu_build(lv_obj_t * pressed_btn, lv_event_t event) /**if return
                 mainmenu->second_menu = lv_list_create(lv_scr_act(), NULL);
                 lv_obj_set_size(mainmenu->second_menu,100,0);
                 lv_obj_align(mainmenu->second_menu,pressed_btn,LV_ALIGN_OUT_LEFT_TOP,0,0);
-                for (int i = 1; i<=mainmenu->number_of_btn_in_sec_menu[btn_index];i++){
-                    list_btn = lv_list_add_btn(mainmenu->second_menu, NULL, mainmenu->second_menu_labels[btn_index][i-1]);
+                for (int i = 1; i<=mainmenu->number_of_btn_in_sec_menu[ext->btn_number];i++){
+                    list_btn = lv_list_add_btn(mainmenu->second_menu, NULL, mainmenu->second_menu_labels[ext->btn_number][i-1]);
                     lv_obj_set_size(list_btn,50,50);
                     lv_obj_set_event_cb(list_btn,connector);
                     lv_group_add_obj(mainmenu->maingroup,list_btn);
@@ -84,6 +84,12 @@ static void menu_build(lv_obj_t * pressed_btn, lv_event_t event)
                 lv_group_remove_all_objs(mainmenu->maingroup);
                 for (int i=1;i<=mainmenu->number_of_btn_in_first_menu[(ext->btn_number)-1];i++){
                     list_btn = lv_list_add_btn(mainmenu->first_menu, NULL, mainmenu->first_menu_labels[(ext->btn_number)-1][i-1]);
+                    if (ext->btn_number == 1){
+                        set_extr_data(list_btn,i-1);
+                    }
+                    else if (ext->btn_number == 2){
+                        set_extr_data(list_btn,i+1);
+                    }
                     lv_obj_set_size(list_btn,50,50);
                     lv_obj_set_user_data(list_btn,mainmenu);
                     lv_obj_set_event_cb(list_btn,submenu_build);
@@ -111,9 +117,8 @@ void set_extr_data(lv_obj_t * btn,int number){
 
 void menu_init(MENU * mainmenu){
     char * labels_for_first_menu[5] =  {"video","image","download","upload",""};
-    char * labels_for_second_menu[19] = {"1","2","3","4","5","6",
-                    "7","8","9","10","11","12",
-                    "13","14","15","16","17","18",""};
+    char * labels_for_second_menu[13] = {"1","2","3","4","5","6",
+                    "7","8","9","10","11","12",""};
     int j = 0;
     for (int iter1 = 0; strcmp("",labels_for_first_menu[iter1]) != 0; iter1++){
         mainmenu->first_menu_labels[j][iter1%2] = labels_for_first_menu[iter1];
