@@ -4,7 +4,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-
+#include "lvgl.h"
 enum{
     LEFT,
     RIGHT,
@@ -38,6 +38,7 @@ void btn_set_menu_level(lv_obj_t * btn, int menu_level);
 void init_menu(MENU * mainmenu,lv_own_align_t align);
 void set_null_ptr(lv_obj_t * btn);
 void lv_menu_create(lv_obj_t * triger_btn,char ** labels,MENU * mainmenu,lv_own_align_t);
+void using_submenu(MENU * mainmenu);
 
 #ifdef __cplusplus
 } /* extern "C" */
