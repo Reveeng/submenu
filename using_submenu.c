@@ -7,7 +7,9 @@ void event_cb(lv_obj_t * btn, lv_event_t event){
         lv_own_align_t my_align = RIGHT;
         MENU * mainmenu = (MENU *)lv_obj_get_user_data(btn);
         mainmenu->maingroup = lv_group_create();
+        init_menu(mainmenu,my_align,btn);
         lv_group_add_obj(mainmenu->maingroup,btn);
+        set_user_menu_size(mainmenu,1,150,130);
         lv_menu_create(btn,btn_label,mainmenu,my_align);
     }
 }
