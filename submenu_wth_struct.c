@@ -123,8 +123,8 @@ void init_menu(MENU * mainmenu,lv_own_align_t align,lv_obj_t * triger_btn){
     }
 }
 
-void set_menu_size(MENU * mainmenu){
-    lv_obj_set_size(mainmenu->Lmenu[mainmenu->number_of_menu_levels-1],mainmenu->sizes_of_menus[mainmenu->number_of_menu_levels-1].size_x,mainmenu->sizes_of_menus[mainmenu->number_of_menu_levels-1].size_y);
+void set_menu_size(lv_obj_t * menu, MySize * Size){
+    lv_obj_set_size(menu,Size.size_x,Size.size_y);
 }
 
 //позволяет задавать то с какой стороны будет строится меню(пока что используется сразу для всех уровней)
@@ -151,13 +151,14 @@ void lv_menu_create(lv_obj_t * triger_btn,char ** labels,MENU * mainmenu,lv_own_
     lv_group_remove_all_objs(mainmenu->maingroup);
     lv_obj_t * newbtns;
     mainmenu->number_of_menu_levels++;
+    int level = mainmenu->number_of_menu_levels;
     create_and_add_new_menu(mainmenu,triger_btn);
-    set_menu_size(mainmenu);
-    set_align_for_menu(triger_btn,mainmenu->Lmenu[mainmenu->number_of_menu_levels-1],mainmenu->align);
+    set_menu_size(mainmenu->Lmenu[level-1],mainmenu->sizes_of_menus[level-1]);
+    set_align_for_menu(triger_btn,mainmenu->Lmenu[level-1],mainmenu->align);
     while(strcmp(labels[iter],"")!=0){
-        newbtns = lv_list_add_btn(mainmenu->Lmenu[mainmenu->number_of_menu_levels-1],NULL,labels[iter]);
+        newbtns = lv_list_add_btn(mainmenu->Lmenu[level-1],NULL,labels[iter]);
         lv_obj_allocate_ext_attr(newbtns, sizeof(MenuItem));
-        btn_set_menu_level_and_nullptr(newbtns,mainmenu->number_of_menu_levels);
+        btn_set_menu_level_and_nullptr(newbtns,level);
         lv_obj_set_user_data(newbtns,mainmenu);
         lv_obj_set_event_cb(newbtns,standart_menu_cb);
         lv_group_add_obj(mainmenu->maingroup,newbtns);
