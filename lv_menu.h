@@ -93,6 +93,8 @@ char ** rewrite_labels(char ** labels);
 int * get_coord(MENU * mainmenu,int i);
 
 void set_menu_transparent(MENU * mainmenu);
+
+int phys_btn_pressed(lv_key_t * key);
 #ifdef __cplusplus
 } /* extern "C" */
 #endif

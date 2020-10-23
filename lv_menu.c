@@ -55,31 +55,61 @@ int * create_coord_next_menu(int level,void * coord,int btn_number){
     return(new_coord);
 }
 
+int phys_btn_pressed(lv_key_t * key){
+    int int_key;
+    if ((*key)>0){
+        if (*key & HW_KEY_CODE_UP){
+            int_key = 1;
+            return(int_key);
+        }
+        if (*key & HW_KEY_CODE_DOWN){
+            int_key = 2;
+            return(int_key);
+        }
+        if (*key & HW_KEY_CODE_MENU){
+            int_key = 3;
+            return(int_key);
+        }
+        if (*key & HW_KEY_CODE_ZOMM){
+            int_key = 4;
+            return(int_key);
+        }
+    }
+}
+
 void standart_menu_cb(lv_obj_t * triger_btn,lv_event_t event){
     BtnItem * btn_attr = lv_obj_get_ext_attr(triger_btn);
     MENU * menu = btn_attr->menu;
-    if (event == LV_EVENT_CLICKED){
-        MenuItem * menu_to_create = get_menu_item(btn_attr->menu->DataBase,btn_attr->menu_item_coord);
-        if (btn_attr->submenu_available == 1)
-            make_and_show_menu(triger_btn,menu,menu_to_create,btn_attr->menu_item_coord);
-
-    }
-    if (event == LV_EVENT_LONG_PRESSED){
-        if (menu->curent_level != 1){
-                rewrite_group(menu->maingroup,menu->visible_menu_list[menu->curent_level-2]);
-                lv_obj_del(menu->visible_menu_list[menu->curent_level-1]);
-                menu->visible_menu_list = (lv_obj_t **)realloc(menu->visible_menu_list,(menu->curent_level-1)*sizeof(lv_obj_t *));
-                menu->curent_level += -1;
-
+    if (event == HW_EVENT_KEY_PRESSED){
+        int key;
+        lv_key_t * key_ptr = (lv_key_t *)lv_event_get_data();
+        key = phys_btn_pressed(key_ptr);
+        switch (key){
+            case 1:
+                lv_group_focus_next(menu->maingroup);
+            case 2:
+                lv_group_focus_prev(menu->maingroup);
+            case 3:{
+                MenuItem * menu_to_create = get_menu_item(btn_attr->menu->DataBase,btn_attr->menu_item_coord);
+                if (btn_attr->submenu_available == 1)
+                    make_and_show_menu(triger_btn,menu,menu_to_create,btn_attr->menu_item_coord);
             }
-        else {
-            menu->curent_level = 0;
-            lv_obj_del(menu->visible_menu_list[0]);
-            menu->visible_menu_list = (lv_obj_t **)realloc(menu->visible_menu_list,0*sizeof(lv_obj_t *));
-            lv_group_add_obj(menu->maingroup,menu->first_btn);
+            case 4:{
+                if (menu->curent_level != 1){
+                    rewrite_group(menu->maingroup,menu->visible_menu_list[menu->curent_level-2]);
+                    lv_obj_del(menu->visible_menu_list[menu->curent_level-1]);
+                    menu->visible_menu_list = (lv_obj_t **)realloc(menu->visible_menu_list,(menu->curent_level-1)*sizeof(lv_obj_t *));
+                    menu->curent_level += -1;
+                }
+                else {
+                    menu->curent_level = 0;
+                    lv_obj_del(menu->visible_menu_list[0]);
+                    menu->visible_menu_list = (lv_obj_t **)realloc(menu->visible_menu_list,0*sizeof(lv_obj_t *));
+                    lv_group_add_obj(menu->maingroup,menu->first_btn);
+                }
+            }
         }
     }
-
 }
 
 void rewrite_group(lv_group_t * maingroup,lv_obj_t * previous_menu){
@@ -226,7 +256,6 @@ void make_and_show_menu(lv_obj_t * triger_btn,MENU * mainmenu,MenuItem * menu, v
 }
 
 void init_menu(MENU * mainmenu,lv_obj_t * triger_btn){
-    mainmenu->maingroup = lv_group_create();
     mainmenu->visible_menu_list = (lv_obj_t **)malloc(sizeof(lv_obj_t *));
     mainmenu->curent_level = 0;
     mainmenu->DataBase = (Menu_DB *)malloc(sizeof(Menu_DB));
