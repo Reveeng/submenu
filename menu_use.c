@@ -27,9 +27,6 @@ void my_event_cb(lv_obj_t * trigger_btn,lv_event_t * event){
     }
 }
 
-//void my_func(lv_obj_t * triger_btn,lv_event_t * event)
-
-
 void my_event_cb2(lv_obj_t * triger_btn,lv_event_t  event){
     lv_obj_t * label = lv_label_create(lv_scr_act(),NULL);
     lv_label_set_text(label,"Hello");
@@ -40,7 +37,11 @@ void my_event_cb3(lv_obj_t * triger_btn,lv_event_t  event){
     lv_label_set_text(label,"World");
     lv_obj_set_pos(label,100,150);
 }
+void my_event_cb4(lv_obj_t *  triger_btn, lv_event_t evnt){
+    MENU * mainmenu = (MENU *)lv_obj_get_user_data(triger_btn);
+    close_all_menu(mainmenu);
 
+}
 
 void menu_use(MENU * mainmenu){
     static lv_style_t style;
@@ -49,4 +50,8 @@ void menu_use(MENU * mainmenu){
     lv_obj_t * test_btn = lv_btn_create(lv_scr_act(),NULL);
     lv_obj_set_user_data(test_btn,mainmenu);
     lv_obj_set_event_cb(test_btn,my_event_cb);
+    lv_obj_t * test_btn1 = lv_btn_create(lv_scr_act(),NULL);
+    lv_obj_set_user_data(test_btn1,mainmenu);
+    lv_obj_set_event_cb(test_btn1,my_event_cb4);
+    lv_obj_set_pos(test_btn1,100,100);
 }

@@ -281,4 +281,11 @@ void lv_menu_create(MENU * mainmenu,lv_obj_t * triger_btn,char ** labels){
     mainmenu->first_menu->menu_labels = rewrite_labels(labels);
     make_and_show_menu(triger_btn,mainmenu,mainmenu->first_menu,coord);
 }
+void close_all_menu(MENU * mainmenu){
+     int iter = 0;
+     while (iter != mainmenu->curent_level){
+        lv_obj_del(mainmenu->visible_menu_list[mainmenu->curent_level-1]);
+        mainmenu->curent_level += -1;
+     }
+}
 

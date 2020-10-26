@@ -96,6 +96,8 @@ int * get_coord(MENU * mainmenu,int i);
 void set_menu_transparent(MENU * mainmenu);
 
 void set_cb_to_btn(MENU * mainmenu,int * coord,int btn_number,lv_event_cb_t callback);
+
+void close_all_menu(MENU * mainmenu);
 #ifdef __cplusplus
 } /* extern "C" */
 #endif
