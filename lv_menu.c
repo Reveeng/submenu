@@ -162,13 +162,14 @@ void set_menu_labels(MENU * mainmenu,int * coord,char ** labels){
     MenuItem * one_menu = get_menu_item(mainmenu->DataBase,coord);
     one_menu->menu_labels = rewrite_labels(labels);
 }
-//функция задающая размеры конкретного подменю, находящегося по нужным координатам
+//function that set sizes for one submenu
+//coord - ptr to array of coordinates
 void set_menu_size(MENU*mainmenu,int * coord,int height,int weight){
     MenuItem * one_menu = get_menu_item(mainmenu->DataBase,coord);
     one_menu->size_of_menu.size_x = weight;
     one_menu->size_of_menu.size_y = height;
 }
-//функция задающая размеры для всех подменю
+//function that set sizes for all submenu
 void set_size_to_all_menu(MENU * mainmenu,int height,int weight){
     Menu_DB * DB = mainmenu->DataBase;
     int iter = 0;
@@ -180,7 +181,7 @@ void set_size_to_all_menu(MENU * mainmenu,int height,int weight){
     mainmenu->first_menu->size_of_menu.size_x = weight;
     mainmenu->first_menu->size_of_menu.size_y = height;
 }
-//функция задающая ориентацию для каждого подменю
+//function that set align for all submenu
 void set_align_to_all_menu(MENU * mainmenu,lv_own_align_t align){
     Menu_DB * DB = mainmenu->DataBase;
     int iter = 0;
@@ -197,7 +198,9 @@ void set_menu_align(MENU * mainmenu,int * coord, lv_own_align_t align){
     MenuItem * one_menu = get_menu_item(mainmenu->DataBase,coord);
     one_menu->align = align;
 }
-//функция проверяющая доступность меню по выбранным координатам в базе меню
+//function checks if the menu is available at the given coordinates for creation
+//DataBase - ptr to struct that contain MenuItems and coordinates
+//coord - ptr to array of coordinates
 int check_submenu(Menu_DB * DataBase,int * coord){
     int available = 0;
     int iter = 0;
@@ -209,7 +212,10 @@ int check_submenu(Menu_DB * DataBase,int * coord){
     }
     return(available);
 }
-//функция задаёт дополнительные атрибуты для кнопки, чтобы упростить навигацию в меню
+//function sets extra attributes for the button
+//btn -  ptr to button
+//iter -  button number
+//coord - ptr to array of coordinates of the menu created by pressing this button
 void set_extr_attr(lv_obj_t * btn,int iter,MENU * menu,void * coord){
     BtnItem * btn_attr = lv_obj_get_ext_attr(btn);
     btn_attr->menu = menu;
@@ -225,7 +231,8 @@ void set_extr_attr(lv_obj_t * btn,int iter,MENU * menu,void * coord){
 //здесь проверяется существует ли меню в базе данных с таким координатами, если да, то 1, если нет, то 0
     btn_attr->submenu_available = check_submenu(menu->DataBase,btn_attr->menu_item_coord);
 }
-//вспомогательная функция которая просто помогает скопировать строки из одной переменной в другую
+//function that copies one variable to another
+//labels -  ptr to array of string
 char ** rewrite_labels(char ** labels){
     int iter = 1;
     char ** new_labels;
@@ -237,17 +244,18 @@ char ** rewrite_labels(char ** labels){
     memcpy(new_labels,labels,mem_size);
     return(new_labels);
 }
-//вызывается если нужно сделать меню прозрачным
+//function makes menu transparent
+//mainmenu - ptr to main menu structure
 void set_menu_transparent(MENU * mainmenu){
     static lv_style_t opa_style;
     lv_style_init(&opa_style);
     lv_style_set_bg_opa(&opa_style,LV_STATE_DEFAULT,LV_OPA_TRANSP);
     mainmenu->opa_style = &opa_style;
 }
-//функция которой задаю где должно распологатьтся меню, для простоты ввел свой тип lv_own_align_t, который просто показывает с какой стороны это делать
-//triger_btn - указатель на нажатую кнопку
-//list_obj - указатель на list который хранит в себе все кнопки
-//align - это просто перечисляемое, надо выбрать одно из 3(LEFT,RIGHT,BOTTOM)
+//the function sets the alignment for the menu
+//triger_btn - ptr to pressed btn
+//list_obj - ptr to list which contain all btn object
+//align - enumerate, need to choose from 3(LEFT,RIGHT,BOTTOM)
 void set_align_to_menu(lv_obj_t * triger_btn,lv_obj_t * list_obj,lv_own_align_t align){
     switch(align){
         case LEFT:{
