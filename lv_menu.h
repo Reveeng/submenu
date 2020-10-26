@@ -22,6 +22,7 @@ typedef struct {
     MySize size_of_menu;
     lv_own_align_t align;
     char ** menu_labels;
+    lv_event_cb_t * list_of_callbacks;
 }MenuItem;
 
 typedef struct {
@@ -93,6 +94,8 @@ char ** rewrite_labels(char ** labels);
 int * get_coord(MENU * mainmenu,int i);
 
 void set_menu_transparent(MENU * mainmenu);
+
+void set_cb_to_btn(MENU * mainmenu,int * coord,int btn_number,lv_event_cb_t callback);
 #ifdef __cplusplus
 } /* extern "C" */
 #endif

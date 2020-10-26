@@ -1,26 +1,26 @@
 #include <malloc.h>
 #include <stdio.h>
+#include <string.h>
 
-typedef struct {
-    int size_x;
-    int size_y;
-} MySize;
+void action1(void)
+{
+    printf("Action 1");
+}
+void action2(void)
+{
+    printf("Action 2");
 
-typedef struct {
-    MySize ** sizes;
-    char ** labels;
-}something;
-
-
-
+}
+void action3(void)
+{
+    printf("Action 3");
+}
 
 void main(void){
-    MySize * A;
-    A = (MySize *)malloc(2*sizeof(MySize));
-    A[0].size_x = 2;
-    A[0].size_y = 3;
-    A[1].size_x = 4;
-    A[1].size_y = 5;
-    printf("%d",A[0].size_x);
-    free(A);
+    int i = 3;
+    void (* actions[3]());
+    actions[0] = action1;
+    actions[1] = action2;
+    actions[2] = action3;
+    *actions[0]();
 }
