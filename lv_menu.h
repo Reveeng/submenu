@@ -22,8 +22,9 @@ typedef struct {
     MySize size_of_menu;
     lv_own_align_t align;
     char ** menu_labels;
+    lv_event_cb_t * list_of_callbacks;
 }MenuItem;
-
+//хранилище всех подменю, содержит в себе подменю и их координаты
 typedef struct {
     MenuItem ** MenuBase;
     int ** CoordBase;
