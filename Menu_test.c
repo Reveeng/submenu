@@ -7,6 +7,17 @@ void event_handler(lv_obj_t * btn,lv_event_t event){
     }
 }
 
+void my_event_cb2(lv_obj_t * triger_btn,lv_event_t  event){
+    lv_obj_t * label = lv_label_create(lv_scr_act(),NULL);
+    lv_label_set_text(label,"Hello");
+    lv_obj_set_pos(label,100,100);
+}
+void my_event_cb3(lv_obj_t * triger_btn,lv_event_t  event){
+    lv_obj_t * label = lv_label_create(lv_scr_act(),NULL);
+    lv_label_set_text(label,"World");
+    lv_obj_set_pos(label,100,150);
+}
+
 void using_menu(void){
     lv_obj_t * test_btn = lv_btn_create(lv_scr_act(),NULL);
     MENU * menu = bind_menu_to_obj(test_btn);
@@ -21,5 +32,7 @@ void using_menu(void){
     set_align_to_all_menu(menu,align);
     set_size_to_all_menu(menu,100,100);
     set_menu_transparent(menu);
+    set_cb_to_btn(menu,C_1,1,my_event_cb2);
+    set_cb_to_btn(menu,C_1,2,my_event_cb3);
     lv_obj_set_event_cb(test_btn,event_handler);
 }
