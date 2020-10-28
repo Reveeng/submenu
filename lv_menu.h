@@ -6,6 +6,7 @@ extern "C" {
 #endif
 #include "lvgl.h"
 
+//if use ENCODER change to 1
 #define USE_ENCODER 0
 
 enum{
