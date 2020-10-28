@@ -65,6 +65,7 @@ int * create_coord_next_menu(int * coord,int btn_number){
 void standart_menu_cb(lv_obj_t * triger_btn,lv_event_t event){
     BtnItem * btn_attr = lv_obj_get_ext_attr(triger_btn);
     MENU * menu = btn_attr->menu;
+    #if USE_ENCODER == 0
     if (event == LV_EVENT_CLICKED){
         //если доступно подменю для данной кнопки, оно создается
         if (btn_attr->submenu_available == 1){
@@ -96,12 +97,14 @@ void standart_menu_cb(lv_obj_t * triger_btn,lv_event_t event){
             menu->vis_menu->curent_level = 0;
             lv_group_remove_all_objs(menu->maingroup);
             lv_obj_del(menu->vis_menu->visible_menu_list[0]);
-//            menu->vis_menu->visible_menu_list = (lv_obj_t **)realloc(menu->vis_menu->visible_menu_list,0*sizeof(lv_obj_t *));
             free(menu->vis_menu->visible_menu_list);
             free(menu->vis_menu);
             lv_group_add_obj(menu->maingroup,menu->vis_menu->first_btn);
         }
     }
+    #else
+
+    #endif
 }
 //перезаписывает основную группу при удалении верхнего меню, на меня предыдущего уровня
 void rewrite_group(lv_group_t * maingroup,lv_obj_t * previous_menu){
@@ -172,8 +175,23 @@ void set_menu_transparent(MENU * menu){
     static lv_style_t opa_style;
     lv_style_init(&opa_style);
     lv_style_set_bg_opa(&opa_style,LV_STATE_DEFAULT,LV_OPA_TRANSP);
+    lv_style_set_bg_opa(&opa_style,LV_STATE_FOCUSED,LV_OPA_10);
+    lv_style_set_border_color(&opa_style,LV_STATE_DEFAULT,LV_COLOR_BLUE);
+    lv_style_set_bg_color(&opa_style,LV_STATE_FOCUSED,LV_COLOR_BLUE);
+    lv_style_set_outline_opa(&opa_style,LV_STATE_FOCUSED,LV_OPA_TRANSP);
+    lv_style_set_border_opa(&opa_style,LV_STATE_DEFAULT,LV_OPA_10);
     menu->opa_style = &opa_style;
+    menu->btn_style = &opa_style;
 }
+
+void set_style_to_menu(MENU * menu,lv_style_t * style){
+    menu->opa_style = style;
+}
+
+void set_style_to_btn(MENU * menu,lv_style_t * style){
+    menu->btn_style = style;
+}
+
 //функция которой задаю где должно распологатьтся меню, для простоты ввел свой тип lv_own_align_t, который просто показывает с какой стороны это делать
 //triger_btn - указатель на нажатую кнопку
 //list_obj - указатель на list который хранит в себе все кнопки
@@ -208,8 +226,8 @@ void make_and_show_menu(lv_obj_t * triger_btn,MENU * menu, int * coord){
     MenuItem * Item = get_menu_item(menu,coord);
     while (strcmp(Item->menu_labels[iter],"")!=0){
         btn = lv_list_add_btn(list_obj,NULL,Item->menu_labels[iter]);
-        if (menu->opa_style != NULL)
-            lv_obj_add_style(btn,LV_OBJ_PART_MAIN,menu->opa_style);//задаю прозрачное кнопки если нужно
+        if (menu->btn_style != NULL)
+            lv_obj_add_style(btn,LV_OBJ_PART_MAIN,menu->btn_style);//задаю прозрачное кнопки если нужно
         lv_group_add_obj(menu->maingroup,btn);
         lv_obj_allocate_ext_attr(btn,sizeof(BtnItem));
         set_extr_attr(btn,iter,menu,coord);//дописываются нужные мне атриубуты в кнопку
@@ -296,6 +314,7 @@ MENU * bind_menu_to_obj(lv_obj_t * triger_obj){
     attr->menu->maingroup = lv_group_create();
     lv_group_add_obj(attr->menu->maingroup,triger_obj);
     attr->menu->opa_style = NULL;
+    attr->menu->btn_style = NULL;
     attr->menu->vis_menu = NULL;
     attr->menu->DB_size = 0;
     return(attr->menu);

@@ -6,6 +6,8 @@ extern "C" {
 #endif
 #include "lvgl.h"
 
+#define USE_ENCODER 0
+
 enum{
     LEFT,
     RIGHT,
@@ -38,6 +40,7 @@ typedef struct {
     visible_menu * vis_menu;
     lv_group_t * maingroup;
     lv_style_t * opa_style;
+    lv_style_t * btn_style;
 }MENU;
 
 typedef struct{

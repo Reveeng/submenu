@@ -18,8 +18,26 @@ void my_event_cb3(lv_obj_t * triger_btn,lv_event_t  event){
     lv_obj_set_pos(label,100,150);
 }
 
+
+lv_style_t * create_style(void){
+    static lv_style_t style;
+    lv_style_init(&style);
+    lv_style_set_bg_opa(&style,LV_STATE_FOCUSED,LV_OPA_10);
+    lv_style_set_bg_color(&style,LV_STATE_FOCUSED,LV_COLOR_BLUE);
+    lv_style_set_bg_opa(&style,LV_STATE_DEFAULT,LV_OPA_10);
+    lv_style_set_bg_color(&style,LV_STATE_DEFAULT,LV_COLOR_RED);
+
+    lv_style_set_border_color(&style,LV_STATE_DEFAULT,LV_COLOR_BLUE);
+    lv_style_set_border_opa(&style,LV_STATE_FOCUSED & LV_STATE_DEFAULT,LV_OPA_TRANSP);
+    lv_style_set_border_side(&style,LV_STATE_FOCUSED & LV_STATE_DEFAULT,LV_BORDER_SIDE_NONE);
+    lv_style_set_outline_opa(&style,LV_STATE_FOCUSED | LV_STATE_DEFAULT,LV_OPA_TRANSP);
+    return(&style);
+}
 void using_menu(void){
     lv_obj_t * test_btn = lv_btn_create(lv_scr_act(),NULL);
+    lv_style_t * style = create_style();
+    lv_obj_add_style(test_btn,LV_OBJ_PART_MAIN,style);
+    lv_obj_set_size(test_btn,10,10);
     MENU * menu = bind_menu_to_obj(test_btn);
     lv_own_align_t align = RIGHT;
     int C_0[2] = {1,0}; int C_1[2] = {2,1}; int C_2[2] = {2,2};
