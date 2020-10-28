@@ -9,10 +9,10 @@ void event_handler(lv_obj_t * btn,lv_event_t event){
     #else
     if (event == HW_EVENT_KEY_PRESSED){
         lv_key_t * key = (lv_key_t *)lv_event_get_data();
-        int ikey = phys_btn_pressed(key);
-        if (ikey == 3){
-            lv_menu_create(btn);
-        }
+        if ((*key)>0){
+            if (key & HW_KEY_CODE_MENU){
+                lv_menu_create(btn);
+            }
     }
     #endif
 }
