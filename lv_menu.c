@@ -61,6 +61,30 @@ int * create_coord_next_menu(int * coord,int btn_number){
     }
     return(new_coord);
 }
+#if USE_ENCODER != 0
+int phys_btn_pressed(lv_key_t * key){
+    int int_key;
+    if ((*key)>0){
+        if (*key & HW_KEY_CODE_UP){
+            int_key = 1;
+            return(int_key);
+        }
+        if (*key & HW_KEY_CODE_DOWN){
+            int_key = 2;
+            return(int_key);
+        }
+        if (*key & HW_KEY_CODE_MENU){
+            int_key = 3;
+            return(int_key);
+        }
+        if (*key & HW_KEY_CODE_ZOMM){
+            int_key = 4;
+            return(int_key);
+        }
+    }
+}
+#endif
+
 //функция стандартного коллбэка для кнопки меню
 void standart_menu_cb(lv_obj_t * triger_btn,lv_event_t event){
     BtnItem * btn_attr = lv_obj_get_ext_attr(triger_btn);
