@@ -2,9 +2,19 @@
 #include "A:\lv_sim_codeblocks_win-master\submenu\lv_menu.h"
 
 void event_handler(lv_obj_t * btn,lv_event_t event){
+    #if USE_ENCODER == 0
     if (event == LV_EVENT_CLICKED){
         lv_menu_create(btn);
     }
+    #else
+    if (event == HW_EVENT_KEY_PRESSED){
+        lv_key_t * key = (lv_key_t *)lv_event_get_data();
+        int ikey = phys_btn_pressed(key);
+        if (ikey == 3){
+            lv_menu_create(btn);
+        }
+    }
+    #endif
 }
 
 void my_event_cb2(lv_obj_t * triger_btn,lv_event_t  event){
@@ -18,7 +28,7 @@ void my_event_cb3(lv_obj_t * triger_btn,lv_event_t  event){
     lv_obj_set_pos(label,100,150);
 }
 
-
+//create style for button on the screen
 lv_style_t * create_style(void){
     static lv_style_t style;
     lv_style_init(&style);
@@ -33,6 +43,7 @@ lv_style_t * create_style(void){
     lv_style_set_outline_opa(&style,LV_STATE_FOCUSED | LV_STATE_DEFAULT,LV_OPA_TRANSP);
     return(&style);
 }
+
 void using_menu(void){
     lv_obj_t * test_btn = lv_btn_create(lv_scr_act(),NULL);
     lv_style_t * style = create_style();
