@@ -103,7 +103,49 @@ void standart_menu_cb(lv_obj_t * triger_btn,lv_event_t event){
         }
     }
     #else
-
+        if (event == HW_EVENT_KEY_PRESSED){
+        int key;
+        lv_key_t * key_ptr = (lv_key_t *)lv_event_get_data();
+        key = phys_btn_pressed(key_ptr);
+        switch (key){
+            case 1:
+                lv_group_focus_next(menu->maingroup);
+            case 2:
+                lv_group_focus_prev(menu->maingroup);
+            case 3:{
+                if (btn_attr->submenu_available == 1){
+                    make_and_show_menu(triger_btn,menu,btn_attr->menu_item_coord);
+                }
+                else{
+                    if (menu->curent_level != 1){
+                        int * prev_coord;
+                        prev_coord = create_coord_prev_menu(btn_attr->menu_item_coord);
+                        MenuItem * menu_cont_btn = get_menu_item(menu->DataBase,prev_coord);
+                        if (menu_cont_btn->list_of_callbacks != NULL){
+                            lv_event_cb_t callback = menu_cont_btn->list_of_callbacks[btn_attr->btn_number];
+                            callback(triger_btn,event);
+                        }
+                    }
+                }
+            }
+            case 4:{
+                if (menu->vis_menu->curent_level != 1){
+                    rewrite_group(menu->maingroup,menu->vis_menu->visible_menu_list[menu->vis_menu->curent_level-2]);
+                    lv_obj_del(menu->vis_menu->visible_menu_list[menu->vis_menu->curent_level-1]);
+                    menu->vis_menu->visible_menu_list = (lv_obj_t **)realloc(menu->vis_menu->visible_menu_list,(menu->vis_menu->curent_level-1)*sizeof(lv_obj_t *));
+                    menu->vis_menu->curent_level += -1;
+                }
+                else {
+                    menu->vis_menu->curent_level = 0;
+                    lv_group_remove_all_objs(menu->maingroup);
+                    lv_obj_del(menu->vis_menu->visible_menu_list[0]);
+                    free(menu->vis_menu->visible_menu_list);
+                    free(menu->vis_menu);
+                    lv_group_add_obj(menu->maingroup,menu->vis_menu->first_btn);
+                }
+            }
+        }
+    }
     #endif
 }
 //перезаписывает основную группу при удалении верхнего меню, на меня предыдущего уровня
